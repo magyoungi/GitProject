@@ -3,7 +3,6 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
 import pyupbit
-from volatility_15 import *
 from PyQt5.QtCore import *
 import requests
 import time
@@ -26,12 +25,11 @@ class Errand:
             current_price = pyupbit.get_ohlcv(ticker,"minute10")['close'][-1]
 
             state = None
-            if (max(past) * 2.5 < present) and (current_price > past_price):
+            if (max(past) * 2.5 > present) and (current_price > past_price):
                 response = requests.post("https://slack.com/api/chat.postMessage",
                                          headers={"Authorization": "Bearer " + myToken},
-                                         data={"channel": "#개인", "text": ticker}
+                                         data={"channel": "#개인", "text": ticker + ' ' + str(current_price) + ' ' + str(current_price * 1.03)}
                                          )
-
             else:
                 return None
 
