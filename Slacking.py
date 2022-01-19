@@ -1,12 +1,6 @@
 from slacker import Slacker
-import sys
-from PyQt5 import uic
-from PyQt5.QtWidgets import *
 import pyupbit
-from PyQt5.QtCore import *
-import requests
 import time
-import json
 import requests
 
 
