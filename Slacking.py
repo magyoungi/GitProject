@@ -6,6 +6,7 @@ import requests
 
 myToken = "xoxb-2840191596917-2843176437875-EYIvuApqUSPIxwM3MMBwV6UW"
 tickers = pyupbit.get_tickers(fiat="KRW")
+print ("autotrade start")
 
 class Errand:
 
