@@ -25,7 +25,7 @@ class Errand:
             current_price = pyupbit.get_ohlcv(ticker,"minute10")['close'][-1]
 
             state = None
-            if (max(past) * 2.5 > present) and (current_price > past_price):
+            if (max(past) * 2.5 < present) and (current_price > past_price):
                 response = requests.post("https://slack.com/api/chat.postMessage",
                                          headers={"Authorization": "Bearer " + myToken},
                                          data={"channel": "#개인", "text": ticker + ' ' + str(current_price) + ' ' + str(current_price * 1.03)}
