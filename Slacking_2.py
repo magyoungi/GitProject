@@ -13,20 +13,22 @@ class Errand:
     def get_market_infos(self, ticker):
 
         try:
-            #"100개의 10분 거래량 갯수의 max 보다 지금의 10분 거래량이 3배가 넘으면 알람"
-            past = pyupbit.get_ohlcv(ticker, "minute10")['volume'][-100:-1]
-            present = pyupbit.get_ohlcv(ticker, "minute10")['volume'][-1]
-            past_price = pyupbit.get_ohlcv(ticker,"minute10")['close'][-2]
-            current_price = pyupbit.get_ohlcv(ticker,"minute10")['close'][-1]
+            past = pyupbit.get_ohlcv(ticker, "minute30")['close'][-2]
+            present = pyupbit.get_ohlcv(ticker, "minute30")['close'][-1]
+            ma65 = present.rolling(65).mean()
 
             state = None
-            if (max(past) * 2.5 > present):# and (current_price > past_price):
+            if past < ma65 and present >= ma65:
                 response = requests.post("https://slack.com/api/chat.postMessage",
                                          headers={"Authorization": "Bearer " + myToken},
-                                         data={"channel": "#getrich", "text": ticker + ' ' + str(current_price) + ' ' + str(current_price * 1.03)}
+                                         data={"channel": "#getrich", "text": 'buy' + ' ' + ticker}
+                                         )
+            elif past > ma65 and present <= ma65:
+                response = requests.post("https://slack.com/api/chat.postMessage",
+                                         headers={"Authorization": "Bearer " + myToken},
+                                         data={"channel": "#getrich", "text": 'sell' + ' ' + ticker}
                                          )
             else:
-
                 return None
 
         except:
@@ -35,10 +37,11 @@ class Errand:
     def main(self):
         while True:
             data1 = {}
-
             for ticker in tickers:
                 data1[ticker] = self.get_market_infos(ticker)
                 time.sleep(0.5)
+
+        time.sleep(1800)
 
 
 errand = Errand()
